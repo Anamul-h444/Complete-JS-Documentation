@@ -22,6 +22,11 @@ _Please click to go to topic>>>>>_
 1. [JS String](#advanceString)
 1. [JS Array](#array)
 1. [JS Object](#object)
+1. [`'this'` keyword in JS](#thisKeyword)
+1. [The Spread Operator](#spreadOperator)
+1. [Type Conversion/coercion](#coercion)
+1. [Advanced function](#functionAdv)
+1. [Document Object Model](#dom)
 
 
 <kbd>**JS Fundamental Topics Details**</kbd>
@@ -784,6 +789,7 @@ switch(RcvVaribale) {
 - What is parameter and argument
 - return statement in function
 - deceleration vs expression in JavaScript function
+- Difference between function and method
 
 > ***What is function:***
 
@@ -850,6 +856,32 @@ const functionName = function(parameters) {
   // function body
 };
 ```
+> ***Difference between function and method***
+
+In JavaScript, a function is a block of code that can be defined and then called by name. A method is a function that is associated with an object.
+
+For example, consider the following code:
+```js
+function greet() {
+  console.log("Hello!");
+}
+
+greet(); // Output: "Hello!"
+
+const person = {
+  name: "John",
+  age: 30,
+  greet: function() {
+    console.log(`Hello, my name is ${this.name}`);
+  }
+};
+
+person.greet(); // Output: "Hello, my name is John"
+```
+Here, greet is a function that can be called on its own, while greet is a method of the person object. It is accessed using the . notation, like person.greet().
+
+In JavaScript, functions and methods are very similar, and you can use them interchangeably in many cases. However, there are some subtle differences in the way they are used and defined. For example, when you define a function, you do not use the function keyword, whereas you do use it when defining a method. Also, the this keyword has a different meaning in functions and methods. In functions, this refers to the global object (usually window in the browser), whereas in methods, this refers to the object itself.
+
 [Go to top:arrow_up: ](#top)
 </details>
 
@@ -2067,8 +2099,23 @@ console.log(sum); //129
 
 <a name='object'></a>
 
+<details>
+<summary>JS Object</summary>
 <h1>JS Obect</h1>
 <kbd>Learning Summary</kbd>
+
+- Access Properties by Dot & Bracket Notation
+- Value changing system
+- Delete Property
+- Enhanced object literal
+- object destructure
+- JavaScript Maps
+  - Essential Map Methods and properties
+  - How to Create a Map
+  - The get() Method
+  - The delete() Method
+  - The forEach method in Maps
+
 
 > ***Access Properties by Dot & Bracket Notation:***
 
@@ -2106,3 +2153,1273 @@ delete bio_data.Age;
 console.log(bio_data);
 //result:  { name: "Anamul", Home_town: "Narsingdi" }
 ```
+> ***Enhanced object literal***
+
+An enhanced object literal is a shorthand notation for defining properties and methods on an object in JavaScript.
+- Computed property names: You can use expressions to define the names of properties and methods in an object literal.
+
+-  Shorthand property names: You can omit the property name if it is the same as the variable name.
+
+- Method properties: You can define methods directly in an object literal, without needing to use the function keyword.
+```js
+// without Enhanced object literal
+let studentBioData1 = {
+  studentName :["Anamul", "Mamun", "Rasel"],
+  examination:function(){
+    console.log("Exam");
+  },
+  result: function(){
+    console.log("passed")
+  }
+};
+```
+```js
+// with Enhanced object literal
+let studentName = ["Anamul", "Mamun", "Rasel"];
+let examination = () => {
+  console.log("Exam");
+};
+let studentBioData = {
+  studentName, // same name
+  examination, // same name
+  result(){    // don't neccessay to write function
+    console.log("passed");
+  }
+};
+console.log(studentBioData);
+//Object { studentName: (3) […], examination: examination(), result: result() }
+```
+```js
+// Write property with expression
+let obj = {
+  ["p" + "roperty"]: "value"
+};
+console.log(obj); // Object { property: "value" }
+```
+> ***object destructure***
+
+In JavaScript, destructuring is a feature that allows you to extract values from arrays or objects and assign them to variables. This can make it easier to work with data in your code, as you can extract only the values that you need and store them in separate variables.
+
+For objects, you can use the curly brace notation { } to destructure the object and extract its properties. For example, given an object like this:
+```js
+let person = {name: "John", age: 30, occupation: "developer"};
+let {name, age} = person;
+console.log(name); // "John"
+console.log(age); // 30
+```
+In this example, the object person is destructured and the values of the name and age properties are extracted and stored in separate variables with the same name.
+
+It's also possible to rename the variable during destructuring if the desired name is different than the property key:
+```js
+let person = { name: "John", age: 30, occupation: "developer"};
+let {name: personName, age: personAge} = person;
+console.log(personName); // "John"
+console.log(personAge); // 30
+```
+You can also destructure object inside function parameter like this:
+```js
+let person = { name: "John", age: 30, occupation: "developer"};
+function printPerson({ name, age }) {
+  console.log(name, age);
+}
+
+printPerson(person); // "John" 30
+```
+Also its possible to destructur nested properties:
+```js
+const user = {
+  name: "John Doe",
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "NY",
+    zip: "12345"
+  },
+  age: 30
+};
+
+// First system
+const { name, address: { street, city, state }, age } = user;
+console.log(name); // "John Doe"
+console.log(street); // "123 Main St"
+console.log(city); // "Anytown"
+console.log(state); // "NY"
+console.log(age); // 30
+
+//Second system 
+const { street} = user.address;
+console.log(street); // 123 Main St
+
+//Third system
+const { address:{street}} = user;
+console.log(street); // 123 Main St
+```
+Destructuring object from method:
+```js
+const user = {
+  name: "John Doe",
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "NY",
+    zip: "12345",
+  },
+  age: 30,
+  fullAddress: function () {
+    return this.address;
+  },
+};
+
+const {street, city, state,} =user.fullAddress();
+console.log(street) //123 Main St
+console.log(city); //Anytown
+console.log(state); //NY
+```
+```js
+const user = {
+  name: "John Doe",
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "NY",
+    zip: "12345",
+  },
+  age: 30,
+  fullName: function ({firstName,lastName}) {
+    return `I am ${firstName} ${lastName}`
+  },
+};
+let object={
+  firstName:"Anamul",
+  lastName:"Haque"
+}
+let data=user.fullName(object);
+console.log(data); //I am Anamul Haque
+```
+> ***JavaScript Maps***
+
+JavaScript Maps are a new feature in JavaScript that allows you to create a map data structure (also called an associative array, hash map, or dictionary) with keys and values of any type. They are similar to Objects in JavaScript, but have a few key differences.
+
+One of the main differences between Maps and Objects is that the keys in a Map can be any data type, not just strings. This means you can use numbers, booleans, and even other objects as keys. Additionally, Maps have built-in methods for adding, removing, and searching for elements, whereas Objects do not.
+
+> ***Essential Map Methods and properties***
+
+- new Map() -	Creates a new Map
+- set() -	Sets the value for a key in a Map
+- get() -	Gets the value for a key in a Map
+- delete() -	Removes a Map element specified by the key
+- has() -	Returns true if a key exists in a Map
+- forEach() -	Calls a function for each key/value pair in a Map
+- entries() -	Returns an iterator with the [key, value] pairs in a Map
+- size -	Returns the number of elements in a Map
+
+> ***How to Create a Map***
+
+You can create a JavaScript Map by:
+
+   - Passing an Array to new Map()
+  -  Create a Map and use Map.set()
+
+```js
+// Create a Map Passing an Array
+const fruits = new Map([
+  ["apples", 500],
+  ["bananas", 300],
+  ["oranges", 200]
+]);
+console.log(fruits); //Map(3) { apples → 500, bananas → 300, oranges → 200 }
+```
+```js
+// Create a Map use Map.set()
+const fruits = new Map();
+
+// Set Map Values
+fruits.set("apples", 500);
+fruits.set("bananas", 300);
+fruits.set("oranges", 200);
+console.log(fruits); //Map(3) { apples → 500, bananas → 300, oranges → 200 }
+```
+> ***The get() Method***
+
+The get() method gets the value of a key in a Map:
+```js
+const fruits = new Map([
+  ["apples", 500],
+  ["bananas", 300],
+  ["oranges", 200]
+]);
+console.log(fruits.get("oranges")); //200
+```
+> ***The delete() Method***
+
+Removes a Map element specified by the key
+```js
+const fruits = new Map([
+  ["apples", 500],
+  ["bananas", 300],
+  ["oranges", 200]
+]);
+fruits.delete("oranges")
+console.log(fruits); //Map { apples → 500, bananas → 300 }
+```
+> ***The forEach method in Maps***
+
+JavaScript's forEach method can be used with both Maps and Sets to iterate over the elements in the collection.
+
+For Maps, the forEach method takes a callback function that is called for each key-value pair in the map. The callback function is passed three arguments: the value, the key, and the map itself. Here's an example:
+
+```js
+let myMap = new Map();
+myMap.set("name", "John");
+myMap.set("age", 30);
+
+myMap.forEach((value, key, map) => {
+  console.log(`${key}: ${value}`);
+});
+
+// Output:
+// name: John
+// age: 30
+```
+[Go to top:arrow_up: ](#topAdv)
+</details>
+
+<a name='thisKeyword'></a>
+
+<details>
+<summary>`this` keyword in JS</summary>
+<h1>`this` keyword in JS</h1>
+
+### ***Learning Summary:***
+- `this` in a Method
+- `this` in Alone, in function with/without use strict mode
+- `this` in Event Handlers
+- `this` in Explicit Function Binding
+- The apply() Method
+- The call() Method
+- `this` in function borrowing (গ্রহণ): bind()
+
+
+this keyword ব্যবহারের উপর ভিত্তি করে বিভিন্ন অবজেক্টকে উল্লেক করে। 
+
+> ***`this` in a Method:***
+
+- অবজেক্টের মধ্যে অবস্থিত মেথডে this keyword ঐ অবজেক্টকে উল্লেখ করে। নিচের উদাহরণে this কে প্রিন্ট করলে সে পুরো অবজেক্টকে রিটার্ন করেছে। 
+- this.firstName এর অর্থ হল এই অবজেক্ট এর firstName।
+```js
+//use this in object method
+let bio_data = {
+  firstName: "Anamul",
+  lastName: "Haque",
+  Age: 32,
+  fullName: function () {
+    console.log(this); //Output - full object
+    return `${this.firstName} ${this.lastName}`
+  },
+};
+console.log( bio_data.fullName());
+//Output - Anamul Haque
+```
+> ***`this` in Alone, in function with/without use strict mode:***
+
+- যখন this কে একা/ফাংশনের মধ্যে ব্যবহার করা হয় তখন সে global object তথা window কে উল্লেখ করে।
+- ফাংশন ছাড়া this কে use strict সহ ব্যবহার করলে সে global object তথা window কে উল্লেখ করে।
+- ফাংশনে this কে use strict সহ ব্যবহার করলে সে undefine দেখাবে। 
+```js
+"use strict";
+let x = this;
+console.log(x);
+//Output - window
+
+"use strict";
+function test(){
+    console.log(this); //Output- undefine
+}
+```
+
+> ***`this` in Event Handlers***
+- যে এইচটিএমএল ইলিমেন্টের মধ্যে Event Handlers ব্যবহার করা হয় তাহাকে উল্লেখ করে। 
+- এখানে বাটনকে উল্লেখ করেছে অর্থাৎ বাটনে ক্লিক করলে সে হাইড হয়ে যাবে।
+```js
+<button onclick="this.style.display='none'">Click to Remove Me!</button>
+``` 
+> ***`this` in Explicit Function Binding***
+
+The call() and apply() methods are predefined JavaScript methods.
+They can both be used to call an object method with another object as argument.
+- এখানে person1 এর `this` এর মধ্যে কোন firstName এবং lastName নাই।
+- তাই  person1 এর মেথডকে call() মেথডের মাধ্যমে কল করে আগুমেন্ট হিসেবে person2 পাঠানো হয়েছে। 
+- এখন `this` দ্বারা person2 এর firstName এবং lastName কে উল্লেখ করতেছে।
+```js
+// Syntex
+func.apply(thisArg, data1, data2...)
+
+// Example
+const person1 = {
+  fullName: function (title1, title2) {
+    return `${title1} ${this.firstName} ${this.lastName} ${title2}`;
+  },
+};
+
+const person2 = {
+  firstName: "Anamul",
+  lastName: "Haque",
+};
+
+// Return "John Doe":
+let data = person1.fullName.call(person2, "Mr", "Miah");
+console.log(data); //Mr Anamul Haque Miah
+```
+In this example, the thisArg is person2 that is work with this, and the data1, data2 which receive parameter of method.
+
+> ***The apply() Method***
+
+The apply() method in JavaScript is a method of the Function object that allows you to call a function with a given this value and arguments provided as an array (or an array-like object)
+```js
+// Syntex
+func.apply(thisArg, [argsArray])
+
+//Exmaple
+function add(a, b) {
+  return `${this.name}'s ${a} daughter and ${b} son.`;
+};
+let student={
+  name:"Anamul",
+  age:20
+}
+let result = add.apply(student, [3, 4]);
+console.log(result)//Anamul's 3 daughter and 4 son.
+```
+In this example, the thisArg is student that is work with this, and the argsArray is [3, 4] which receive parameter of method.
+
+Note that the call() method is similar to the apply() method, but it takes the arguments as separate values instead of an array.
+
+> ***The call() method in jS***
+
+In JavaScript, the `call()` method allows you to call a function with a given this value and arguments provided individually. The call() method is a method of the Function prototype, and it can be used on any function. The syntax for using call() is:
+```js
+functionName.call(thisArg, arg1, arg2, ...);
+```
+    thisArg is the value of this inside the function.
+    arg1, arg2, ... are the arguments passed to the function.
+
+For example:
+```js
+function greet(greeting) {
+  return `${greeting}, ${this.name}!`;
+}
+
+let person = { name: 'John' };
+let message = greet.call(person, 'Hello');
+console.log(message);  // "Hello, John!"
+```
+In the example above, `call()` is used to call the greet() function, with person object as the this value and "Hello" as the greeting argument.
+
+
+> ***`this` in function borrowing (গ্রহণ): bind()***
+- bind এর মাধ্যমে অবজেক্টের মেথডের firstName এবং lastName পাঠানো হয়েছে। ফলে person অবজেক্ট this দ্বারা তার নিজের firstName এবং lastName কে উল্লেখ না করে যাকে পাঠানো হয়েছে তাহাকে উল্লেখ করতেছে।
+```js
+const person = {
+  firstName:"John",
+  lastName: "Doe",
+  fullName: function(title1,title2 ) {
+    return `${title1} ${this.firstName} ${this.lastName} ${title2}`;
+  }
+}
+
+const member = {
+  firstName:"Hege",
+  lastName: "Nilsen",
+}
+
+let fullName = person.fullName.bind(member );
+console.log(fullName); //function fullName() (Return function with binding data)
+console.log(fullName("Mr", "Miah")); // pass argument in method parameter
+```
+[Go to top:arrow_up: ](#topAdv)
+</details>
+
+<a name='spreadOperator'></a>
+
+<details>
+<summary>The Spread Operator</summary>
+<h1>The Spread Operator</h1>
+
+### ***Learning Summary:***
+
+- What is spread operator?
+- Merging arrays
+- Creating a copy of an array
+- Extracting elements from an array
+- Adding elements to a function's arguments
+- Restructuring an object
+- Creating a new object
+- Merging object properties
+- Spread string
+
+> ***What is spread operator?***
+
+The spread operator in JavaScript allows you to take an iterable (such as an array or object) and expand its contents into a new array or object. It is represented by three dots (...).
+
+> ***Merging arrays:***
+
+The spread operator can be used to merge two or more arrays into a single array. For example:
+```js
+let array1 = [1, 2, 3];
+let array2 = [4, 5, 6];
+let mergedArray = [...array1, ...array2];
+console.log(mergedArray); // [1, 2, 3, 4, 5, 6]
+```
+> ***Creating a copy of an array:***
+
+The spread operator can be used to create a copy of an array, which is independent of the original array. For example:
+```js
+let originalArray = [1, 2, 3];
+let copiedArray = [...originalArray];
+console.log(copiedArray); // [1, 2, 3]
+```
+> ***Extracting elements from an array:***
+
+The spread operator can be used to extract elements from an array and assign them to variables. For example:
+```js
+let array = [1, 2, 3];
+let [first, second, third] = [...array];
+console.log(first); // 1
+console.log(second); // 2
+console.log(third); // 3
+```
+> ***Adding elements to a function's arguments:***
+
+The spread operator can be used to add elements to a function's arguments. For example:
+```js
+function sum(a, b, c) {
+return a + b + c;
+}
+let numbers = [1, 2, 3];
+ console.log(...numbers); //1,2,3
+console.log(sum(...numbers)); // 6
+```
+> ***Restructuring an object:***
+
+The spread operator can be used to restructure an object, by extracting its properties and reassigning them to a new object. For example:
+```js
+let originalObject = { name: "John", age: 30, city: "New York" };
+let { name, ...rest } = originalObject;
+console.log(name); // "John"
+console.log(rest); // { age: 30, city: "New York" }
+```
+> ***Creating a new object:***
+
+The spread operator can also be used to create a new object from an existing one. For example:
+
+```js
+const originalObject = { a: 1, b: 2 };
+const newObject = { ...originalObject };
+console.log(newObject); // Output: { a: 1, b: 2 }
+```
+> ***Merging object properties:***
+
+The spread operator can be used to merge the properties of multiple objects into one. For example:
+```js
+const object1 = { a: 1, b: 2 };
+const object2 = { b: 3, c: 4 };
+const mergedObject = { ...object1, ...object2 };
+console.log(mergedObject); // Output: { a: 1, b: 3, c: 4 }
+```
+> ***Spread string:***
+
+```js
+let str = "Hello World";
+
+let charArray = [...str];
+console.log(charArray); // ["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d"]
+```
+[Go to top:arrow_up: ](#topAdv)
+</details>
+
+<a nme='coercion'></a>
+
+<details>
+<summary>Type Conversion/coercion</summary>
+<h1>Type Conversion/coercion</h1>
+
+Coercion in JavaScript refers to the process of converting a value from one data type to another.
+
+### ***Learning Summary:***
+- String change to Array spilt() method
+- Array change to String
+- Strings change to Number
+- Number() method
+- parseFloat() method
+- parseInt() method
+- The Unary(+)Operator
+- Converting Numbers to Strings
+- String() method
+- toString() method
+- toFixed()
+- toPrecision()
+- Converting Dates to Strings
+- Converting Booleans to Numbers
+- Converting Booleans to Strings
+- Automatic Type Conversion
+- Automatic String Conversion
+
+> ***String change to Array spilt() method:***
+```js
+let countries = "Bangladesh"; 
+countries = countries.split(""); (use Empty data)
+alert (countries);
+//result: [B,a,n,g,l,a,d,e,s,h]
+
+let countries = "Bangladesh"; 
+countries = countries.split(); (not use empty data)
+alert (countries);
+//result: ["Bangladesh"]
+
+let countries = "Bangladesh is our country"; 
+countries = countries.split(" "); 
+alert (countries);
+//result: [Bangladesh,is,our,country]
+
+let countries = "Bangladesh, Pakistan, China"; 
+countries = countries.split(" ,"); 
+console.log (countries);
+//result:  [ "Bangladesh, Pakistan, China" ]
+```
+
+> ***Array change to String:***
+```js
+let countries = ["Bangladesh, Pakistan, China"]; 
+countries = countries.toString();
+console.log (countries);
+//result:   "Bangladesh, Pakistan, China" 
+```
+> ***Strings change to Number:***
+
+_**Number() method**_
+```js
+console.log(Number("3.14")); //3.14
+console.log(Number(Math.PI)); //3.14159265358979
+console.log(Number(" ")); //0
+console.log(Number("NotNumber")); //Nan
+```
+_**parseFloat() method**_ 
+```js
+//Return Floating/decimal number
+console.log(parseFloat("3.765")); //3.765
+console.log(parseFloat("2.123")); //2.123
+```
+_**parseInt() method**_
+
+```js
+//Return only integer
+console.log(parseInt("3.765")); //3
+console.log(parseInt("2.123")); //2
+```
+_**The Unary(+)Operator**_
+```js
+let y = "5";      // y is a string
+let x = + y;      // x is a number
+```
+> ***Converting Numbers to Strings:***
+
+_**String() method**_
+```js
+String(x)         // returns a string from a number variable x
+String(123)       // returns a string from a number literal 123
+String(100 + 23)  // returns a string from a number from an expression (Output "123")
+```
+_**toString() method**_
+
+```js
+x.toString()
+(123).toString() //"123"
+(100 + 23).toString() //"123"
+```
+_**toFixed()**
+
+ Fixed how much qty show after decimal.
+ ```js
+let num = 10.56789;
+console.log(num.toFixed(2));  // Output: "10.57"
+console.log(num.toFixed(3));  // Output: "10.568"
+console.log(num.toFixed(4));  // Output: "10.5679"
+```
+
+_**toPrecision()**
+
+ determinal How mush qty show from start.
+ 
+ ```js
+let num = 123.456;
+console.log(num.toPrecision(3));  // Output: "123"
+console.log(num.toPrecision(4));  // Output: "123.5"
+console.log(num.toPrecision(5));  // Output: "123.46"
+console.log(num.toPrecision(6));  // Output: "123.456"
+```
+## Converting Dates to Strings:
+```js
+String(Date())  // returns "Thu Jul 17 2014 15:38:19 GMT+0200 (W. Europe Daylight Time)" 
+```
+## Converting Booleans to Numbers:
+```js
+Number(false)     // returns 0
+Number(true)      // returns 1 
+```
+## Converting Booleans to Strings
+```js
+false.toString()   // returns "false"
+true.toString()    // returns "true"
+```
+## Automatic Type Conversion:
+When JavaScript tries to operate on a "wrong" or unexpected data type, it will try to convert the value to a "right" type:
+- if Js get string operator (+) and any side string operend can be concated stringe.
+- if Js get other operator like - * ** / etc all operend can be converted in Number.
+
+```js
+5 + null    // returns 5         because null is converted to 0
+"5" + null  // returns "5null"   because null is converted to "null"
+"5" + 2     // returns "52"      because 2 is converted to "2"
+"5" - 2     // returns 3         because "5" is converted to 5
+"5" * "2"   // returns 10        because "5" and "2" are converted to 5 and 2 
+```
+## Automatic String Conversion:
+```js
+let myVar = {name:"Fjohn"}  // toString converts to "[object Object]"
+let myVar = [1,2,3,4]       // toString converts to "1,2,3,4"
+let myVar = new Date()      // toString converts to "Fri Jul 18 2014 09:08:55 GMT+0200"
+```
+[Go to top:arrow_up: ](#topAdv)
+</details>
+
+
+
+<a name='functionAdv'></a>
+
+<details>
+<summary>JS function</summary>
+<h1>JS function</h1>
+
+### _***Learning Summary***_
+
+- How many types of function in JS
+- Traditional function
+- Expression/Anonomus function
+- Arrow function
+- Higher order function vs call back function
+- Call function into function
+- Value/premitive vs Reference Argument
+- Return a function
+- closures in function
+- Rest parameter
+- Default Parameter
+
+> ***How many types of function in JS:***
+
+- Traditional function.
+- Expression/Anonomus function.
+- Arrow function.
+- IIFES - Immidiately invokable function expressions.
+
+> ***Traditional function:***
+
+```js
+// Traditional Function without return
+        function addition(num1, num2) {
+            var result = num1 + num2;
+            document.write(result)
+        }
+        addition(5, 6)
+
+        /* Traditional Function with return*/
+        function addition(num1, num2) {
+            var result = num1 + num2;
+            return result
+        }
+        var x = addition(5, 6)
+        document.write(x)
+```
+> ***Expression/Anonomus function:***
+
+```js
+const addNumber = function addition(num1, num2) {
+            var result = num1 + num2;
+            document.write(result)
+        }
+    addNumber(5, 6)
+```
+> ***IIFES - Immidiately invokable function expressions***
+- Emergency Function call
+
+```js
+ (function addition(num1, num2) {
+            var result = num1 + num2;
+            document.write(result)
+        })(5, 6)
+```
+> ***Arrow function***
+
+In JavaScript, an arrow function is a shorter syntax for writing a function expression.Arrow functions are anonymous.These functions are best suited for non-method functions, and they cannot be used as constructors.
+
+Here is the basic syntax for an arrow function:
+```js
+// Syntax:
+(parameters) => { statements }
+
+// Example
+const greet = (name) => {
+  console.log(`Hello, ${name}!`);
+}
+
+greet('John');  // Output: 'Hello, John!'
+```
+- If an arrow function has a single argument, you can omit the parentheses around the argument list. For example, (x) => { return x * x } can be written as x => { return x * x }.
+- If an arrow function has a single line of code in its body, you can omit the curly braces and the return keyword. The value of the single line of code will be returned automatically. For example, x => { return x * x } can be written as x => x * x. For example:
+```js
+const square = x => x * x;
+
+console.log(square(2));  // Output: 4
+```
+- Arrow functions are often used in conjunction with higher-order functions (functions that operate on other functions) such as map, filter, and reduce.
+
+> ***Higher order function vs call back function***
+
+A higher-order function is a function that takes one or more functions as arguments and/or returns a function as its result. In JavaScript, this is often used to create functional programming constructs such as map, filter, and reduce.
+
+A callback function, on the other hand, is a function that is passed as an argument to another function and is invoked at a later time. Callback functions are commonly used in JavaScript to handle asynchronous behavior, such as event handling, network requests, and timers.
+
+In short, a higher-order function is a function that operates on other functions, while a callback function is a function that is passed as an argument to another function. Both are important concepts in functional programming and are widely used in JavaScript.
+### Example:
+An example of a higher-order function in JavaScript is the Array.prototype.map() method. This method takes a callback function as an argument and applies it to each element in an array, returning a new array with the results. Here's an example of using the map method to square each element in an array:
+```js
+let numbers = [1, 2, 3, 4, 5];
+let squaredNumbers = numbers.map(function(number) {
+  return number * number;
+});
+console.log(squaredNumbers); // [1, 4, 9, 16, 25]
+```
+An example of a callback function in JavaScript is the setTimeout() function. This function takes a callback function as an argument, along with a delay time in milliseconds. The callback function is invoked after the specified delay. Here's an example of using setTimeout to log a message after a delay of 2 seconds:
+
+```js
+setTimeout(function() {
+  console.log("Hello, World!");
+}, 2000);
+```
+In the example above, the function passed to setTimeout is the callback function, and it will be invoked after the delay of 2000ms.
+
+> ***Return a function***
+```js
+function greet(greeting) {
+  return function (name) {
+    console.log(greeting + " " + name);
+  };
+}
+
+let sayHello = greet("Hello");
+
+console.log(sayHello); //function greet(name)
+
+sayHello("John"); // Hello John
+```
+- একটি ফাংশনের প্যারামিটারে আর্গুমেন্ট হিসেবে আরেকটি ফাংশনকে ব্যবহার করা হলে বা আরেকটি ফাংশনকে রিটার্ন করা হল কলবেক ফাংশন। 
+- যে ফাংশনের প্যারামিটারে ব্যবহার করা হয় বা রিটার্ন করা হয় তাহাকে Higher Order function এবং যাকে প্যারামিটার হিসেবে ব্যবহার করা হয় বা রিটার্ন করা হয় তাহাকে callback function বলে।
+- Higher Order function execute হওয়ার পর callback function execute হবে। অর্থাৎ একটি কাজ সম্পন্ন হওয়ার আরেকটি কাজকে ডেকে কার্য সম্পাদন করা।
+
+```js
+function myDisplayer(result) {
+            console.log(result)
+        }
+
+        function myCalculator(num1, num2, myCallback) {
+            let sum = num1 + num2;
+            myCallback(sum);
+        }
+
+        myCalculator(5, 5, myDisplayer);
+```
+- myCalculator এ যোগ সম্পন্ন হওয়ার পর myDisplayer ফাংশন কল হবে এবং ফলাফল প্রদর্শিত হবে।
+- callback function কে Higher Order function  এ কল করার সময় () প্যারান্থিসিস ব্যবহার করা যাবেনা।
+
+> ***Call function into function:***
+
+- call mixJuice and pass argument.
+- Receive mixJuice parameter and pass argument in fruitcutter as apple and orange;
+- For call fruitcutter he return fruit pieces.
+```js
+function fruitCutter(fruit){
+    const fruitPices = fruit*4;
+    return fruitPices;
+};
+
+function mixJuice(apple, orange){
+    const applePices = fruitCutter(apple);//pass apple for cutting
+    const orangePices = fruitCutter(orange);//pass orange for cutting
+const juice =`Make juice with ${applePices} pices apple and ${orangePices} pices orange.`;
+return juice
+};
+const juice = mixJuice(2,3);
+console.log(juice);
+//Output - Make juice with 8 pices apple and 12 pices orange.
+```
+<img src='./images/function.jpg'>
+
+> ***Value/premitive vs Reference Argument***
+
+In JavaScript, primitive data types (e.g. numbers, strings, booleans) are passed by value, while objects and arrays are passed by reference.
+
+When a primitive value is passed as an argument to a function, a copy of the value is made and passed to the function. The original value remains unchanged, and any changes made to the value within the function do not affect the original value.
+
+When an object or array is passed as an argument to a function, a reference to the object or array is passed. This means that the function can modify the original object or array, and those changes will be visible outside of the function. However, if you reassign the variable inside the function, the reference is lost.
+
+It is important to be aware of this distinction when working with functions and objects in JavaScript, as it can lead to unexpected behavior if not handled properly.
+```js
+let name = "Anamul";
+let data = {
+  class:"Ten",
+  Roll:01
+};
+function student(studentName, studentData){
+  studentName="Rasel";
+  studentData.class="Nine";
+  return studentData.Roll === 01 && "He can be admited!"
+};
+
+console.log(student(name, data));
+console.log(name); // Anamul
+console.log(data.class); //Nine
+```
+
+> ***closures in function***
+
+- প্যারেন্টস ফাংশনের ভেরিয়েবল চাইল্ড ফাংশন ব্যবহার করে কারণ এই ফাংশনটি চাইল্ডের জন্য গ্লোবাল ভেরিয়েবল। 
+- ক্লোজার ফাংশন একটি ফাংশনকে রিটার্ণ করে।
+Closures in JavaScript allow a function to access variables from its parent scope, even after the parent function has returned. This can be useful for creating private variables and methods, or for creating function factories. Closures can also be used to create self-contained and stateful functions, which can be useful in event handling, callbacks, and other asynchronous programming patterns.
+```js
+function outerFunction(x) {
+  let variable = x;
+  return function innerFunction() {
+    console.log(variable);
+  }
+}
+
+let closure = outerFunction(10);
+closure(); // logs "10"
+```
+In this example, the outerFunction takes a single argument x and assigns it to the variable variable. It then returns the innerFunction, which when invoked, logs the value of variable. The innerFunction maintains a reference to the variable and the scope of outerFunction even though the outerFunction has completed execution.
+
+> ***Rest parameter***
+
+A rest parameter in JavaScript allows a function to accept any number of arguments as an array. This can be useful when a function is not sure how many arguments will be passed to it, or when a function wants to accept a variable number of arguments. It is represented by three dots (...) preceding the parameter name.
+
+For example, the following function uses a rest parameter to accept any number of numbers and return their sum:
+```js
+function sum(...nums) {
+  let total = 0;
+  for (const num of nums) {
+    total += num;
+  }
+  return total;
+}
+
+console.log(sum(1, 2, 3));  // 6
+console.log(sum(1, 2, 3, 4, 5));  // 15
+```
+```js
+let printValue = (a, b,...params)=>{
+  console.log(a, b, params)
+};
+printValue(1,2,3,4,5); //1,2,[3,4,5]
+```
+> ***Default Parameter***
+
+Using default parameters in JavaScript allows developers to set a default value for a function parameter in case the parameter is not provided when the function is called. This can be useful in situations where the function needs a specific value to be passed in, but that value is not always known or provided.
+
+For example, if a function needs to take in a user's name, but the user is not always going to be logged in or their name is not always known, a default parameter can be set to "Anonymous" so that the function can still run even if the user's name is not provided.
+
+Another use case for default parameters is when a function takes in a lot of parameters and some of them are optional. By setting default parameters for the optional parameters, the developer can make the function more flexible and easy to use.
+
+Overall, default parameters are a useful tool for making functions more robust and handling cases where certain parameters are not provided.
+```js
+let printValue = (name="Don't set your name.")=>{
+  return name;
+};
+
+// Without argument
+console.log( printValue()); //Don't set your name.
+
+// With argument
+console.log( printValue("Anamul Haque")); //Anamul Haque
+```
+[Go to top:arrow_up: ](#top)
+</details>
+
+
+
+<a name='dom'></a>
+
+<details>
+<summary>Document Object Model</summary>
+<h1>Documant Object Modep</h1>
+
+### ***Learning Summary:***
+
+- What is DOM
+- Power of DOM
+- What work will done by DOM
+- JavaScript - HTML DOM Methods
+- What is node
+- Different types of nodes
+- DOM/node/nodeList Selector
+- What is nodeList?
+- What is firstChild, lastChild, nextSibling, previousSibling, parentNode, and childNodes properties in JavaScript
+- Travarsing Node
+- Properties and Method list of node for change, create, add, delete, replace etc
+- Policy of properties as change, add, remove and replace
+- Changing node properties
+- Create, remove & add HTML ELEMENT Method
+- Create a new li and put on ol
+
+
+> ***What is DOM?***
+
+The HTML Document Object Model (DOM) is a programming interface for HTML documents. It represents the structure of a document as a tree-like model, with the document's elements and attributes as nodes in the tree. The DOM allows you to programmatically access and manipulate the content and structure of an HTML document.
+
+JavaScript provides a number of methods for interacting with the HTML DOM. Some common HTML DOM methods include:
+Here is a list of some common methods that are used to manipulate the DOM:
+- getElementById() 
+- getElementsByTagName()
+- getElementsByClassName()
+- querySelector()
+
+The HTML DOM is a standard for how to get, change, add, or delete HTML elements.The HTML DOM is a standard object model and programming interface for HTML. It defines:
+- The HTML elements as objects
+- The properties of all HTML elements
+- The methods to access all HTML elements
+- The events for all HTML elements
+
+> ***Power of DOM:***
+
+With the object model, JavaScript gets all the power it needs to create dynamic HTML:
+- JavaScript can change all the HTML elements in the page
+- JavaScript can change all the HTML attributes in the page
+- JavaScript can change all the CSS styles in the page
+- JavaScript can remove existing HTML elements and attributes
+- JavaScript can add new HTML elements and attributes
+- JavaScript can react to all existing HTML events in the page
+- JavaScript can create new HTML events in the page
+
+> ***What work will done by DOM:***
+
+- How to change the content of HTML elements
+- How to change the style (CSS) of HTML elements
+- How to react to HTML DOM events
+- How to add and delete HTML elements
+
+> ***JavaScript - HTML DOM Methods***
+
+- JS DOM methods are actions you can perform (on HTML Elements).
+- HTML DOM properties are values (of HTML Elements) that you can set or change.
+- The HTML DOM can be accessed with JavaScript Methods.
+- In the DOM, all HTML elements are defined as objects.
+
+> ***What is node?***
+
+In the context of the Document Object Model (DOM), a node is an object that represents a part of the document, such as an element, attribute, text, or comment. Each node has a specific type and properties that can be accessed and manipulated using JavaScript.
+
+> ***Different types of nodes:***
+
+_**Element nodes:**_ Represent elements in the HTML or XML document. Examples include `<p>, <div>, <a>`.
+
+_**Attribute nodes:**_ Represent the attributes of an element. Examples include id, class, href.
+
+_**Text nodes:**_ A TextNode is a type of node in the Document Object Model (DOM) that represents a piece of text. It can be used to add text to an HTML or XML document, and can be manipulated and modified with JavaScript. It is a child of the Element node and can not have any child nodes.
+```js
+<p>text node</p>
+```
+
+_**Comment nodes:**_ Represent comments in the HTML or XML document.
+
+_**Document nodes:**_ Represent the entire document and are the root of the DOM tree.
+
+You can use various DOM methods such as getElementById(), querySelector(), getElementsByTagName() and so on, to access and manipulate the nodes in the DOM. Each node has its own properties and methods. For example, elements have methods such as getAttribute() and setAttribute() to access and set attributes, while text nodes have a property textContent.
+
+
+> ***DOM/node/nodeList Selector:***
+
+Methods of selecting DOM:
+- getElementById(id)  - By id
+- getElementsByTagName(name)  - By TagName
+- getElementsByClassName(name)  - By className
+- querySelector() - is used to select the first element that matches a CSS selector
+- querySelectorAll()- is used to select all elements that match a CSS selector. It returns a NodeList of all matching elements.
+
+### Example:
+```html
+<body>
+    <p id="demoId">For find by id</p>
+    <h1>For find by TagName</h1>
+    <h2 class="demoClass">For find by className</h2>
+    <h3 name="demoName">for find by name attr</h3>
+    <h4 class="demoQuery">For find by querySelector</h4>
+    <h5 class="demoQueryAll">For find by querySelectorAll</h5>
+    <p class="demoQueryAll">For find by querySelectorAll</p>
+
+    <script src="./custom.js"></script>
+  </body>
+```
+```js
+// Method of finding node by ID
+var data1 = document.getElementById("demoId");
+console.log(data1); //Return node
+
+// Method of finding node by tagName
+var data2 = document.getElementsByTagName("h1")[0];
+console.log(data2); //Return nodeList as array so indexing.
+
+// Method of finding node by className
+var data3 = document.getElementsByClassName("demoClass")[0];
+console.log(data3); //Return nodeList as array so indexing.
+
+// Method of finding node by name attribute
+var data4 = document.getElementsByName("demoName")[0];
+console.log(data4); //Return nodeList as array so indexing.
+
+// Method of finding element by querySelector
+var data5 = document.querySelector(".demoQuery");
+console.log(data5);//Return node
+
+// Method of finding element by querySelectorAll
+var data6 = document.querySelectorAll(".demoQueryAll");
+console.log(data6); // Return nodeList
+```
+> ***What is nodeList?***
+
+In JavaScript, a NodeList is a collection of nodes that can be accessed and manipulated like an array. It is similar to an array of elements, but it includes all types of nodes, such as text nodes, element nodes, and comment nodes.
+```js
+<div id="parent">
+    <p id="first-child">First child</p>
+    <p id="second-child">Second child</p>
+    <p id="third-child">Third child</p>
+</div>
+const parentNode = document.getElementById("parent");
+const childNodes = parentNode.childNodes;
+console.log(childNodes); // NodeList(3) [text, p#first-child, text, p#second-child, text, p#third-child, text]
+```
+- You can also use forEach loop or map method to iterate through the NodeList.
+```js
+const childNodeValue = childNodes.map(function(node) {
+  return node.nodeValue;
+});
+console.log(childNodeValue);
+```
+- It's important to note that a NodeList is not a true array, so it does not have access to all the array methods (such as filter, reduce, etc). But you can convert it to an array using the Array.from() method like this:
+```js
+const listItems = document.querySelectorAll("li");
+const itemText = Array.from(listItems).map((item) => {
+  return item.textContent;
+});
+console.log(itemText);
+```
+
+> ***What is firstChild, lastChild, nextSibling, previousSibling, parentNode, and childNodes properties in JavaScript?***
+```js
+<div id="parent">
+    <p id="first-child">First child</p>
+    <p id="second-child">Second child</p>
+    <p id="third-child">Third child</p>
+</div>
+
+const parentNode = document.getElementById("parent");
+const firstChild = parentNode.firstChild;
+console.log(firstChild); // Text Node: "First child"
+
+const lastChild = parentNode.lastChild;
+console.log(lastChild); // <p id="third-child">Third child</p>
+
+const secondChild = document.getElementById("second-child");
+const nextSibling = secondChild.nextSibling;
+console.log(nextSibling); // <p id="third-child">Third child</p>
+
+const thirdChild = document.getElementById("third-child");
+const previousSibling = thirdChild.previousSibling;
+console.log(previousSibling); // <p id="second-child">Second child</p>
+
+const parentNodeOfThirdChild = thirdChild.parentNode;
+console.log(parentNodeOfThirdChild); // <div id="parent">...</div>
+
+const childNodes = parentNode.childNodes;
+console.log(childNodes); // NodeList(3) [text, p#first-child, text, p#second-child, text, p#third-child, text]
+```
+
+> ***Travarsing Node:***
+
+Traversing a node in the Document Object Model (DOM) refers to the process of moving through the nodes in the tree-like structure of the DOM in order to find or manipulate specific elements.
+```js
+let val;
+val = document
+  .getElementsByTagName("nav")[0]
+  .getElementsByTagName("ul")[0]
+  .getElementsByTagName("li")[0].textContent; //home
+
+val = document
+  .getElementsByTagName("nav")[0]
+  .getElementsByTagName("ul")[0]
+  .getElementsByTagName("li")[0].attributes="about us" //about us
+
+val = document.querySelector("#services").querySelector("ul li").textContent;
+val = document.querySelector("#services").querySelectorAll("ul")[0].firstChild.nextSibling;
+console.log(val);
+```
+
+> ***Properties and Method list of node for change, create, add, delete, replace etc.***
+
+> ***Properties:***
+
+  - nodeType: returns the type of node (e.g. element, text, comment)
+    nodeName: returns the name of the node (e.g. "div" for a "div" element)
+  - nodeValue: returns the value of the node (e.g. the text content of a text node)
+  - parentNode: returns the parent node of the current node
+  - childNodes: returns a list of child nodes of the current node
+  - firstChild: returns the first child node of the current node
+  - lastChild: returns the last child node of the current node
+  - previousSibling: returns the previous sibling node of the current node
+  - nextSibling: returns the next sibling node of the current node
+  - attributes: returns a list of attributes of the current node as an NamedNodeMap object
+  - style: returns the inline styles of the current node
+  - classList: returns the class names of the current node as a DOMTokenList object
+  - innerHTML : returns the textual and HTML contents of the node
+  - innerText: returns the only textual contents of the node
+  - textContent : returns the textual contents of the node
+  - id: returns the id of the current node
+  - tagName: returns the name of the tag of the current node
+    
+Methods:
+
+  - appendChild(node): adds a new child node to the current node
+  - removeChild(node): removes a child node from the current node
+  - insertBefore(newNode, referenceNode): inserts a new node before the specified reference node
+  - replaceChild(newNode, oldNode): replaces an existing child node with a new node
+  - cloneNode([deep]): creates a copy of the current node
+  - getAttribute(name): returns the value of the specified attribute
+  - setattribute(name, value): sets or changes the value of an attribute
+  - removeAttribute(name): removes an attribute
+  - hasattribute(name): returns a Boolean indicating whether the current node has the specified attribute
+  - addEventListener(event, listener): adds an event listener to the current node
+  - removeEventListener(event, listener): removes an event listener from the current node
+  - dispatchEvent(event): triggers an event on the current node
+
+
+> ***Policy of properties as change, add, remove and replace***
+1. Selecting node.
+2. Slecting node properties.
+3. assign value.
+
+> ***Changing node properties***
+```js
+// Change heading textNode
+let selectNode= document.querySelector("#services").getElementsByTagName("h2")[0];
+selectNode.innerText = "Know about our services";
+
+// changing style
+let selectNode1 =  document.getElementsByTagName("ul")[0];
+selectNode1.style.background="red";
+selectNode1.style.listStyle = "none";
+
+// Add class
+let selectNode2= document.querySelector("#services").getElementsByTagName("h2")[0];
+selectNode2.classList.add("newClass");
+console.log(selectNode2) //<h2 class="newClass">
+
+// Changing text
+let selectNode3 =  document.getElementsByTagName("ul")[0];
+selectNode3.childNodes[0].textContent = "About us"
+```
+> ***Create, remove & add HTML ELEMENT Method:***
+
+document.createElement(element)  -> Create an HTML element
+document.appendChild(element)	-> Add an HTML element
+document.removeChild(element)	-> Remove an HTML element
+document.replaceChild(new, old)	-> Replace an HTML element
+document.write(text)		-> Write into the HTML Document
+
+> ***Create a heading element with text***
+```js
+//First finding Div where I want to create element:
+var firstDiv = document.querySelector("#services");
+
+//Then create new element:
+var heading3 = document.createElement("h3");
+
+//Create Text for new element:
+var text = document.createTextNode("This is heading 3");
+
+//put text on new element:
+heading3.appendChild(text);
+
+//Finally put element on Div:
+firstDiv.appendChild(heading3);
+```
+```js
+//remove element
+First finding and then remove by below method:
+
+firstDiv.removeChild(heading5);
+
+//adding element before
+var firstDiv = document.querySelector("#first-div");
+var heading6 = document.createElement("h6");
+var text = document.createTextNode("This is heading 6");
+heading6.appendChild(text);
+var heading4=document.querySelector('h4');
+//firstDiv.insertBefore(heading6, heading4);
+firstDiv.insertAfter(heading6, heading4);
+
+//Replace  element:
+ <div class="container">
+    <h3>Cosmetics Item</h3>
+    <ol>
+        <li>Soap</li>
+        <li>Shampoo</li>
+        <li>Snow</li>
+    </ol>
+</div>
+
+let newHeading = document.createElement('h3');
+newHeading.appendChild (document.createTextNode('Beauty Item'));
+let oldHeading = document.querySelector ('h3');
+let parents = oldHeading.parentElement;
+parents.replaceChild(newHeading,oldHeading);// For replace find replacing parents node
+```
+> ***Create a new li and put on ol***
+```js
+<ol>
+        <li>Soap</li>
+        <li>Shampoo</li>
+        <li>Snow</li>
+</ol>
+
+
+//Create li
+let olItem = document.createElement("li");
+ 
+//Add class in li
+olItem.className="newName";  
+
+//Add id in li
+olItem.id ="newId";	
+
+//Add attribute which firstName is attrPropertName and 2nd is his value	
+olItem.setAttribute('title', 'titleName');
+
+//Add textNode in li and put on ol
+let text =  document.createTextNode("New text");
+olItem.appendChild(text)
+
+//Select ol
+let selectNode = document.getElementsByTagName("ol")[0];
+
+//add li in ol
+selectNode.appendChild(olItem)
+```
+[Go to top:arrow_up: ](#top)
+</details>

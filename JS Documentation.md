@@ -25,9 +25,11 @@ _Please click to go to topic>>>>>_
 1. [JS Object](#object)
 1. [`'this'` keyword in JS](#thisKeyword)
 1. [The Spread Operator](#spreadOperator)
+1. [The Rest Operator](#rest)
 1. [Type Conversion/coercion](#coercion1)
 1. [Advanced function](#functionAdv)
 1. [Document Object Model](#dom)
+1. [Module](#module)
 
 <kbd>**JS Fundamental Topics Details**</kbd>
 
@@ -1066,6 +1068,7 @@ In JavaScript, functions and methods are very similar, and you can use them inte
 - Details about for loop
 - Details about for-in loop
 - Details about for-of loop
+- Loop in function
 
 > **_What is loop in JavaScript:_**
 
@@ -1246,6 +1249,75 @@ This will log the index and element of each element in the array to the console:
 2: 3
 3: 4
 4: 5
+```
+
+## Loop in function
+
+- Without return in loop rightly loop complete.
+
+```js
+const arr = ["Anamul", "Haque"];
+
+function concateArray(names) {
+  for (let name of names) {
+    console.log(name); //Anamul, Haque
+  }
+}
+console.log(concateArray(arr)); //undefined
+```
+
+- when return variable in loop only print first item from array because due to return loop stop after iterate first item. Because when return function is stop execute.
+
+```js
+// Without declared variable
+const arr = ["Anamul", "Haque"];
+
+function concateArray(names) {
+  for (let name of names) {
+    return name;
+  }
+}
+console.log(concateArray(arr)); //Anamul
+
+//By declared variable
+const arr = ["Anamul", "Haque"];
+
+function concateArray(names) {
+  for (let name of names) {
+    let printName = "";
+    printName += name;
+    return printName;
+  }
+}
+console.log(concateArray(arr)); //Anamul
+```
+
+- Slove this problem
+
+```js
+//Without concate
+const arr = ["Anamul", "Haque"];
+
+function concateArray(names) {
+  let printName = "";
+  for (let name of names) {
+    printName = name;
+  }
+  return printName;
+}
+console.log(concateArray(arr)); //Haque
+
+//With concate
+const arr = ["Anamul", "Haque"];
+
+function concateArray(names) {
+  let printName = "";
+  for (let name of names) {
+    printName += name;
+  }
+  return printName;
+}
+console.log(concateArray(arr)); //AnamulHaque
 ```
 
 [Go to top:arrow_up: ](#top)
@@ -2091,6 +2163,7 @@ myArray.splice(2, 0, 6, 7); // Inserts 6 and 7 at index 2
 console.log(myArray); // [1, 2, 6, 7, 3, 4, 5] - original array has been modified
 ```
 
+The first argument to splice() specifies the index at which to start.
 In this example, the splice() method inserts the elements 6 and 7 at index 2 of myArray, so the resulting array is [1, 2, 6, 7, 3, 4, 5].
 
 ## Replacing elements in an array
@@ -2103,6 +2176,7 @@ console.log(myArray); // [1, 2, 'a', 'b', 5] - original array has been modified
 ```
 
 In this example, the splice() method replaces two elements starting from index 2 with the elements 'a' and 'b', so the resulting array is [1, 2, 'a', 'b', 5].
+The first argument to splice() specifies the index at which to start changing the array, the second argument specifies the number of elements to remove, and any subsequent arguments specify the elements to add.
 
 It's important to note that the splice() method modifies the original array. If you don't want to modify the original array, you should use the slice() method instead.
 
@@ -2415,6 +2489,24 @@ fruits.forEach((item, index) => console.log(item, index));
 //This will also log "apple 0", "banana 1", "mango 2" in the console.
 ```
 
+- There is no return in forEach()
+- forEach by default print last indexs value
+
+```js
+onst arr2 = [1, 2, 3]
+ let number1;
+let number =[];
+let result=arr2.forEach((num)=>{
+  number1 = num*2
+   number.push(num*2)
+   return num
+})
+console.log(number1) //6 (When only re-asign value)
+console.log(number) //[2,4,6]
+console.log(result) //undefined
+
+```
+
 > **_The forEach() method in Set_**
 
 For Sets, the forEach method takes a callback function that is called for each value in the set. The callback function is passed two arguments: the value and the set itself. Here's an example:
@@ -2435,88 +2527,127 @@ mySet.forEach((value, set) => {
 
 > **_The map() method_**
 
-The map() method in JavaScript is used to create a new array.
-The map() function in JavaScript is a method that is used to transform the elements of an array. It takes a callback function as its first argument, which is called for each element in the array. The callback function takes three arguments: the current element, the index of the current element, and the array itself.
-
-- ম্যাপ এ্যারের প্রত্যেকটি ইলিমেন্টকে পর্যায়ক্রমে আলাদাভাবে এ্যাকসেস করে।
-- ম্যাপ প্যারামিটার হিসেবে একটি ফাংশন রিসিভ করে, ঐ ফাংশনের প্যারামিটার এ্যারের প্রত্যেকটি ইলিমেন্টকে পর্যায়ক্রমে আলাদাভাবে এ্যাকসেস করে। এই প্যারামিটার থেকে ভেল্যু এ্যাকসেস করে তার থেকে আউটপুট পাওয়ার জন্য রিটার্ণ করতে হয়।
+- The map() method in JavaScript is used to create a new array.
+- The map() function in JavaScript is a method that is used to transform the elements of an array. It takes a callback function as its first argument, which is called for each element in the array. The callback function takes three arguments: the current element, the index of the current element, and the array itself.
+- map() use in only array.
+- map() itrate every element from array and return a new array.
+- map() doesn't muted original array only modify every element into callback function and return new array.
+- modify possible only in callback function.
+- Must return without not work.
 
 ```js
-let students = [
-  {
-    Name: "Anamul",
-    gpa: 3.5,
-  },
-  {
-    Name: "mamun",
-    gpa: 3,
-  },
-  {
-    Name: "Anis",
-    gpa: 2.5,
-  },
-];
+const arr = [1, 2, 3, 4];
 
-/*Map with anonymous function*/
-const student = students.map(function (student) {
-  console.log(student);
-  return student.Name;
+let result = arr.map((element, index, originalArray) => {
+  console.log(element); //1,2,3,4 (Iterate every element)
+  console.log(index) //0,1,2,3 (index)
+  console.log(originalArray) //[[1, 2, 3, 4],[1, 2, 3, 4],[1, 2, 3, 4],[1, 2, 3, 4]] (iterate origal array)
+  console.log(index)
+  return element * 2; (Modify every element)
 });
-document.write(student);
 
-/*Map with arrow function*/
-const student1 = students.map((student) => student.Name);
-document.write(student1);
+console.log(result); //[2,4,6,8](Modifying new array)
+console.log(arr); //[1, 2, 3, 4] (Doesn't modify original array)
 ```
 
 > **_The filter() Method_**
 
-The filter() method in JavaScript is a built-in function that allows you to filter an array based on a specified condition. It creates a new array with all elements that pass the test implemented by the provided function.
-
-- ফিল্টার কন্ডিশনের উপর ভিত্তি করে এ্যারে থেকে ফিল্টার করে পুনরায় ঐ ফিল্টারের এ্যারে রিটার্ণ করে।
-- এখানে এ্যারে থেকে প্রত্যেকটা student কে রিসিভ করে যাদের gpa তিন এর কম অথবা সমান তাদের এ্যারেকে রিটার্ণ করে।
-
-```js
-//Syntax:
-var newArray = oldArray.filter(function (element, index, array) {
-  // Code to test the element
-  // Return true if the element should be included in the new array
-  // Return false if the element should be excluded from the new array
-});
-```
+- The filter() method in JavaScript is a built-in function that allows you to filter an array based on a specified condition and return an array.
+- filter() use in only array.
+- filter() itrate every element from array based on condition and return a new array.
+- filter() doesn't muted original array only modify every element into callback function and return new array.
+- Must return without not work.
 
 ```js
-//Example:
+const arr = [1, 2, 3, 4];
 
-var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-var evenNumbers = numbers.filter(function (number) {
-  return number % 2 === 0;
+let result = arr.filter((element) => {
+  console.log(element); //1,2,3,4(Iterate all element)
+  return element % 2 === 0; //return odd number
 });
-console.log(evenNumbers); // Output: [2, 4, 6, 8, 10]
+console.log(result); //[2,4] (new array based on condition)
+console.log(arr); //[1, 2, 3, 4] (Doesn't modify original array)
 ```
-
-In this example, the filter() method is used to filter out all odd numbers from the numbers array. The function passed to filter() checks if each element in the array is divisible by 2 (meaning it's even) and returns true if it is and false if it's not. The filter() method then creates a new array (evenNumbers) with all elements that returned true and excludes the elements that returned false.
 
 > **_The Filter() & Map() use together_**
 
 - যাদের তিন এর নিচে তাদেরকে ফিল্টার করে Map করলে Map এর ফাংশেনের প্যারামিটারে সে এ্যারেটি চলে আসে। পরে ম্যাপিং এ সে এ্যারে থেকে ছাত্রের নাম/ নামের এ্যারে এ্যাকসেস করা হয়।
 
 ```js
-const student4 = students
-  .filter((student) => student.gpa < 3)
-  .map((student) => student.Name);
-console.log(student4);
-console.log(student4[0]);
+const students = [
+  {
+    studentName: "Anamul Haque",
+    roll: 01,
+    gpa: 4,
+  },
+  {
+    studentName: "Mamun",
+    roll: 05,
+    gpa: 5,
+  },
+];
+
+let newStudent = students
+  .filter((student) => student.gpa > 4)
+  .map((student) => student.studentName);
+console.log(newStudent[0]); //Mamun
+```
+
+# The find() Method
+
+- The find() only work in array.
+- The find() method iterate all element based on condition and return first finding element without array.
+- Doesn't muted original array
+
+```js
+const arr = [1, 2, 3, 4];
+let result = arr.find((element) => {
+  console.log(element); //1,2,3,4
+  return element % 2 === 0;
+});
+console.log(result); //2
+```
+
+# The findIndex() method
+
+- The findIndex() only work in array.
+- The findIndex() method iterate all element based on condition and return first finding elements index.
+- Doesn't muted original array
+
+```js
+const arr = [1, 2, 3, 4];
+
+let result = arr.findIndex((element) => {
+  console.log(element); //1,2,3,4
+  return element % 2 === 0;
+});
+
+console.log(result); //1
+```
+
+# The some() & every() method
+
+- They return true or false depanding on condition.
+- The some() method return true if any element is match based on condition.
+- The every() method return true if all element is match based on condition.
+
+```js
+const arr = [1, 2, 3, 4];
+
+let isMatch = arr.some((num) => num % 2 === 0);
+console.log(isMatch); //true
+
+let isAllMatch = arr.every((num) => num % 2 === 0);
+console.log(isAllMatch); //false
 ```
 
 > **_The reduce() Mehtod_**
 
 The reducer() method in JavaScript is a higher-order function that is used to reduce an array of values into a single value.
 
-- It takes two parameters: a callback function and an initial value. The callback function is called for each element in the array and is passed two arguments: the accumulated value (also known as the "accumulator") and the current value.
+- It takes two parameters: a callback function and initial value
+- The callback function is called for each element in the array and is passed two arguments: the accumulated value (also known as the "accumulator") and the current value.
 - The initial value is the starting value for the accumulator.
-
-The callback function should return the updated accumulator value after each iteration. The final value returned by the reducer() method is the final accumulator value after all iterations have completed.
 
 ### Syntax:
 
@@ -2524,21 +2655,46 @@ The callback function should return the updated accumulator value after each ite
 array.reduce((acc, currentValue) => {}, intialValue);
 ```
 
-Here is an example of using the reducer() method to add up all the values in an array:
+- যদি initial value set না করা হয় এ্যারের ০ ইনডেক্সটি হল acc এবং ১ ইনডেক্সটি হল currentValue। তারপর ‍acc undefine এবং currentValue। হল ২ ইনডেক্স। এভাবে চলমান.....
+- পরবর্তীতে যা রিটার্ন করা হবে তা undefine ‍acc তে এ্যাসাইন হবে।
+
+- যদি initial value set করা হয় তাহলে acc হবে সেটকৃত ভেল্যু এবং currentValue হবে এ্যারের ০ ইনডেক্স।
+
+```js
+//Without set initial value
+let numbers = [1, 2, 3, 4];
+let sum = numbers.reduce(function (acc, currentValue) {
+  // console.log("acc:", acc, "current:", currentValue) //acc:1 current:2,   acc: undefine current:3,   acc:undefine current:4 (without return)
+  // console.log("acc:", acc, "current:", currentValue) //acc:1 current:2,     acc: 1 current:3,   acc:1 current:4 (with acc return)
+  // console.log("acc:", acc, "current:", currentValue) //acc:1 current:2,     acc: 2 current:3,   acc:3 current:4 (with acc return)
+  // return acc
+  // return currentValue
+});
+
+//With set initial value
+let numbers = [1, 2, 3, 4];
+let sum = numbers.reduce(function (acc, currentValue) {
+  // console.log("acc:", acc, "current:", currentValue) //acc:10 current:1,   acc: undefine current:2,   acc:undefine current:3,  acc:undefine current:4  (without return)
+  //  console.log("acc:", acc, "current:", currentValue) //acc:10 current:1,     acc: 10 current:2,   acc:10 current:3, acc:10 current:4  (with acc return)
+  console.log("acc:", acc, "current:", currentValue); //acc:10 current:1,     acc: 1 current:2,   acc:2 current:3.... (with acc return)
+  //return acc
+  return currentValue;
+}, 10);
+```
 
 ```js
 let numbers = [1, 2, 3];
 let sum = numbers.reduce(function (acc, currentValue) {
   return acc + currentValue;
 }, 0);
-console.log(sum); // 7
+console.log(sum); // 6
 // acc means previous value
 /*
 with set initial value
 preValue/acc  currentValue
 0       +        1 = 1
 1       +        2 = 3
-3       +        3 = 7
+3       +        3 = 6
 7
 */
 
@@ -2588,6 +2744,60 @@ In this example, the callback function creates a new property in the accumulator
 
 As you can see, the reducer() method is a powerful tool that can be used to perform a variety of operations on arrays of values. It can be used to simplify complex code and make it more readable.
 
+```js
+let books = [
+  {
+    subject: "Bangla",
+    booksName: ["A", "B", "C"],
+  },
+  { subject: "Engilsh", booksName: ["F", "K", "M"] },
+];
+
+let booksList = books.reduce((acc, curr) => {
+  return [...acc, ...curr.booksName];
+}, []);
+
+console.log(booksList); //["A", "B", "C", "F", "K", "M"]
+```
+
+```js
+let names = ["A", "B", "C", "B", "A", "B"];
+let countName = names.reduce((acc, curr) => {
+  console.log(acc, curr);
+  if (curr in acc) {
+    acc[curr] = acc[curr] + 1;
+  } else {
+    acc[curr] = 1;
+  }
+  return acc;
+}, {});
+
+console.log(countName); //{A:2, B:3, C:1}
+```
+
+let people = [
+{ name: "John", age: 30 },
+{ name: "Jane", age: 25 },
+{ name: "Bob", age: 30 },
+];
+
+function groupPeople(arr, property) {
+let group = arr.reduce((acc, curr) => {
+let prop = curr[property];
+if (prop in acc) {
+acc[prop].push(curr);
+} else {
+acc[prop] = [curr];
+}
+
+    return acc;
+
+}, {});
+return group;
+}
+
+console.log(groupPeople(people, "age")); //{30:[{ name: "John", age: 30 },{ name: "Bob", age: 30 }], 25: { name: "Jane", age: 25 }}
+
 > **_chaining filetr(), map() and reduce() method_**
 
 ```js
@@ -2604,6 +2814,36 @@ let sum = numbers
   .map((largeNumber) => largeNumber / 2)
   .reduce((acc, val) => acc + val);
 console.log(sum); //129
+```
+
+- Give discount which prodeucts price is above 100 and show discount-Products: Sopa-250, Lux-50
+
+```js
+let products = [
+  { name: "Sopa", price: 500 },
+  { name: "Lux", price: 100 },
+  { name: "Snow", price: 50 },
+  { name: "Glass", price: 20 },
+];
+
+let sale = products
+  .filter((product) => product.price >= 100)
+  .map((product) => {
+    product.price = product.price / 2;
+    return product;
+  })
+  .reduce((acc, curr, index, arr) => {
+    console.log(acc, curr);
+    if (index === arr.length - 1) {
+      acc = acc + curr.name + "-" + curr.price;
+    } else {
+      acc = acc + curr.name + "-" + curr.price + ", ";
+    }
+
+    return acc;
+  }, "discount-Products:");
+
+console.log(sale); //discount-Products: Sopa-250, Lux-50
 ```
 
 [Go to top:arrow_up: ](#topAdv)
@@ -2644,6 +2884,51 @@ console.log(bio_data.Age); //output - 32
 console.log(bio_data["name"]); //output - Anamul
 console.log(bio_data["Age"]); //output - 32
 ```
+
+> **_dot notation vs bracket notation_**
+
+In JavaScript, there are two ways to access the properties of an object: dot notation and bracket notation.
+
+Dot notation is the more common way to access object properties, and is used when you know the name of the property you want to access. To use dot notation, you simply type the name of the object, followed by a dot, and then the name of the property you want to access. For example:
+
+```js
+const person = {
+  name: "John",
+  age: 30,
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+  },
+};
+
+console.log(person.name); // "John"
+console.log(person.address.city); // "Anytown"
+```
+
+In contrast, bracket notation is used when you want to access an object property using a variable or a string that is not a valid identifier. To use bracket notation, you place the property name inside brackets, like this:
+
+```js
+const person = {
+  name: "John",
+  age: 30,
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+  },
+};
+
+const propName = "name";
+console.log(person[propName]); // "John"
+
+const city = "city";
+console.log(person.address[city]); // "Anytown"
+```
+
+Note that bracket notation is necessary when the property name is a reserved keyword or contains special characters, such as spaces or hyphens. Additionally, bracket notation allows you to use variables or expressions to access object properties dynamically.
+
+In general, dot notation is more concise and easier to read, while bracket notation is more flexible and powerful. When accessing object properties, it's important to use the notation that is most appropriate for the situation.
 
 > **_Value changing system_**
 
@@ -2940,17 +3225,58 @@ myMap.forEach((value, key, map) => {
 
 ### **_Learning Summary:_**
 
-- `this` in a Method
+- what is implicit and explicit in JavaScript
 - `this` in Alone, in function with/without use strict mode
+- `this` in a Method
 - `this` in Event Handlers
-- `this` in Explicit Function Binding
-- The apply() Method
-- The call() Method
-- `this` in function borrowing (গ্রহণ): bind()
+- implicit vs explicit use `this` keyword
+- Details about the call() method
+- Details about the apply() Method
+- Details about the bind() Method
 
-this keyword ব্যবহারের উপর ভিত্তি করে বিভিন্ন অবজেক্টকে উল্লেক করে।
+> **_implicit vs explicit in JavaScript_**
 
-> **_`this` in a Method:_**
+"implicit"(অন্তনির্হিত অর্থাৎ পূর্ব নিধারিত) usually means that something is done automatically, without being directly specified in the code.  
+For example, when you use the + operator with a string and a number, JavaScript will implicitly convert the  
+string to a number before performing the addition.
+
+"Explicit" (স্পষ্ট তথা অন্য কোন মেথড এর মাধ্যমে) generally means that something is done in a clear, direct, and obvious way, where the code explicitly states what needs to be done. For example, explicitly converting a string to a number using the parseInt or parseFloat functions.
+
+```js
+// Explicit conversion of a string to a number
+let str = "42";
+let num = parseInt(str); // Explicitly convert string to number using parseInt
+
+// Implicit conversion of a string to a number
+let str2 = "42";
+let num2 = str2 + 0; // Implicitly convert string to number by adding it to a number
+```
+
+In general, it's a good practice to make conversions and operations explicit in your code to make it easier to understand and debug. However, sometimes implicit conversions can be useful and save you from writing extra code. Just be aware of them and make sure they don't cause unexpected behavior in your program.
+
+> **_`this` in Alone, in function with/without use strict mode (implicit):_**
+
+- যখন this কে একা/ফাংশনের মধ্যে ব্যবহার করা হয় তখন সে global object তথা window কে উল্লেখ করে।
+- ফাংশন ছাড়া this কে use strict সহ ব্যবহার করলে সে global object তথা window কে উল্লেখ করে।
+- ফাংশনে this কে use strict সহ ব্যবহার করলে সে undefine দেখাবে।
+
+```js
+"use strict";
+let x = this;
+console.log(x);
+//Output - window
+
+("use strict");
+function test() {
+  console.log(this); //Output- undefine
+}
+
+function checkThis() {
+  console.log(this); // window
+}
+```
+
+> **_`this` in a Method (implicit):_**
 
 - অবজেক্টের মধ্যে অবস্থিত মেথডে this keyword ঐ অবজেক্টকে উল্লেখ করে। নিচের উদাহরণে this কে প্রিন্ট করলে সে পুরো অবজেক্টকে রিটার্ন করেছে।
 - this.firstName এর অর্থ হল এই অবজেক্ট এর firstName।
@@ -2970,25 +3296,7 @@ console.log(bio_data.fullName());
 //Output - Anamul Haque
 ```
 
-> **_`this` in Alone, in function with/without use strict mode:_**
-
-- যখন this কে একা/ফাংশনের মধ্যে ব্যবহার করা হয় তখন সে global object তথা window কে উল্লেখ করে।
-- ফাংশন ছাড়া this কে use strict সহ ব্যবহার করলে সে global object তথা window কে উল্লেখ করে।
-- ফাংশনে this কে use strict সহ ব্যবহার করলে সে undefine দেখাবে।
-
-```js
-"use strict";
-let x = this;
-console.log(x);
-//Output - window
-
-("use strict");
-function test() {
-  console.log(this); //Output- undefine
-}
-```
-
-> **_`this` in Event Handlers_**
+> **_`this` in Event Handlers(implicit)_**
 
 - যে এইচটিএমএল ইলিমেন্টের মধ্যে Event Handlers ব্যবহার করা হয় তাহাকে উল্লেখ করে।
 - এখানে বাটনকে উল্লেখ করেছে অর্থাৎ বাটনে ক্লিক করলে সে হাইড হয়ে যাবে।
@@ -2997,18 +3305,54 @@ function test() {
 <button onclick="this.style.display='none'">Click to Remove Me!</button>
 ```
 
-> **_`this` in Explicit Function Binding_**
+> **_implicit vs explicit use `this` keyword_**
 
-The call() and apply() methods are predefined JavaScript methods.
-They can both be used to call an object method with another object as argument.
+Here are the differences between implicit and explicit this:
 
+    Implicit `this`: When a function is called as a method of an object, the object becomes the context of `this`. For example:
+
+```js
+const person = {
+  name: "Alice",
+  sayHello() {
+    console.log(`Hello, my name is ${this.name}`);
+  },
+};
+
+person.sayHello(); // logs "Hello, my name is Alice"
+```
+
+In this case, this is implicitly set to person because sayHello() is called as a method of person.
+
+    Explicit this: Sometimes you might want to call a function with a specific `this` value (this কে নিজ থেকে নির্ধারণ করে দেওয়া), rather than using the default context. You can do this by using the call(), apply(), or bind() methods. For example:
+
+```js
+function sayHello() {
+  console.log(`Hello, my name is ${this.name}`);
+}
+
+const person = { name: "Alice" };
+
+sayHello.call(person); // logs "Hello, my name is Alice"
+sayHello.apply(person); // logs "Hello, my name is Alice"
+const sayHelloToPerson = sayHello.bind(person);
+sayHelloToPerson(); // logs "Hello, my name is Alice"
+```
+
+In this case, this is explicitly set to person using the call(), apply(), or bind() methods.
+
+In general, it's a good practice to use implicit this when working with object methods and explicit this when you need to specify a specific context for a function. The choice depends on the use case and your preference.
+
+> **_Details about call()metod_**
+
+- call() মেথডের মাধ্যমে ফাংশনকে কল করা হয়।
 - এখানে person1 এর `this` এর মধ্যে কোন firstName এবং lastName নাই।
 - তাই person1 এর মেথডকে call() মেথডের মাধ্যমে কল করে আগুমেন্ট হিসেবে person2 পাঠানো হয়েছে।
 - এখন `this` দ্বারা person2 এর firstName এবং lastName কে উল্লেখ করতেছে।
 
 ```js
 // Syntex
-func.apply(thisArg, data1, data2...)
+func.call(defineThisKeyword, param1, param2...)
 
 // Example
 const person1 = {
@@ -3027,9 +3371,54 @@ let data = person1.fullName.call(person2, "Mr", "Miah");
 console.log(data); //Mr Anamul Haque Miah
 ```
 
-In this example, the thisArg is person2 that is work with this, and the data1, data2 which receive parameter of method.
+In this example, the thisArg is person2 that `this`, and the title1, title2 which receive parameter of method.
 
-> **_The apply() Method_**
+## Complex example of call() method:
+
+- fullName2 is function not method so, `this` use explicit by call() method
+
+```js
+let student = {
+  fName: "Anamul",
+  lname: "Haque",
+  roll: 10,
+  fullName1() {
+    return function fullName2(title) {
+      console.log(`${title} ${this.fName} ${this.lname} `); //Hi Hasan Jamil
+    };
+  },
+};
+let studentName = {
+  fName: "Hasan",
+  lname: "Jamil",
+};
+
+let data1 = student.fullName1(); //Create reference of fullName2 function
+console.log(data1);
+data1.call(studentName, "Hi"); //Call fullName2 function with parameter
+```
+
+## Or
+
+```js
+let student = {
+  fName: "Anamul",
+  lname: "Haque",
+  roll: 10,
+  fullName1() {
+    const that = this;
+    return function fullName2(title) {
+      console.log(`${title} ${that.fName} ${that.lname} `); //Hi Hasan Jamil
+    };
+  },
+};
+
+let data1 = student.fullName1(); //Create reference of fullName2 function
+console.log(data1);
+data1.call("", "Hi"); //Call fullName2 function with parameter
+```
+
+> **_Details about the apply() Method_**
 
 The apply() method in JavaScript is a method of the Function object that allows you to call a function with a given this value and arguments provided as an array (or an array-like object)
 
@@ -3053,32 +3442,7 @@ In this example, the thisArg is student that is work with this, and the argsArra
 
 Note that the call() method is similar to the apply() method, but it takes the arguments as separate values instead of an array.
 
-> **_The call() method in jS_**
-
-In JavaScript, the `call()` method allows you to call a function with a given this value and arguments provided individually. The call() method is a method of the Function prototype, and it can be used on any function. The syntax for using call() is:
-
-```js
-functionName.call(thisArg, arg1, arg2, ...);
-```
-
-    thisArg is the value of this inside the function.
-    arg1, arg2, ... are the arguments passed to the function.
-
-For example:
-
-```js
-function greet(greeting) {
-  return `${greeting}, ${this.name}!`;
-}
-
-let person = { name: "John" };
-let message = greet.call(person, "Hello");
-console.log(message); // "Hello, John!"
-```
-
-In the example above, `call()` is used to call the greet() function, with person object as the this value and "Hello" as the greeting argument.
-
-> **_`this` in function borrowing (গ্রহণ): bind()_**
+> **_Details about the bind() metod_**
 
 - bind এর মাধ্যমে অবজেক্টের মেথডের firstName এবং lastName পাঠানো হয়েছে। ফলে person অবজেক্ট this দ্বারা তার নিজের firstName এবং lastName কে উল্লেখ না করে যাকে পাঠানো হয়েছে তাহাকে উল্লেখ করতেছে।
 
@@ -3099,6 +3463,79 @@ const member = {
 let fullName = person.fullName.bind(member);
 console.log(fullName); //function fullName() (Return function with binding data)
 console.log(fullName("Mr", "Miah")); // pass argument in method parameter
+```
+
+> **_Constructor function_**
+
+- constructor function name define by Capital letter.
+- constructor function call by new keyword.
+- In constructor function this create a empty object {}
+- In object assign value and assigning value automatic return this function.
+
+```js
+function PrintProfile(fName, lName) {
+  console.log(this); // Return black object PrintProfile{}
+  //Assign Value in object
+  this.fName = fName;
+  this.lName = lName;
+  this.fullName = () => {
+    return `${this.fName} ${this.lName}`;
+  };
+}
+
+let anamul = new PrintProfile("Anamul", "Haque");
+console.log(anamul); //Automatic return object without return from function
+let mamun = new PrintProfile("Mamun", "Khan");
+console.log(mamun);
+```
+
+# `this` in arrow function
+
+- In arrow function `this' do not indicate window.
+- in arrow function `this` indicates his parents property.
+
+## Example without arrow function
+
+```js
+function printName() {
+  let profile = {
+    fName: "Anamul",
+    lName: "Haque",
+    userFullName: function () {
+      return function fullName() {
+        return `${this.fName} ${this.lName}`;
+      };
+    },
+  };
+  return profile;
+}
+
+let userProfile = printName();
+console.log(userProfile.userFullName()); //fullName()
+let user = userProfile.userFullName();
+console.log(user()); //undefined undefined
+```
+
+## Example with arrow function
+
+```js
+function printName() {
+  let profile = {
+    fName: "Anamul",
+    lName: "Haque",
+    userFullName: function () {
+      return (fullName = () => {
+        return `${this.fName} ${this.lName}`;
+      });
+    },
+  };
+  return profile;
+}
+
+let userProfile = printName();
+console.log(userProfile.userFullName()); //fullName()
+let user = userProfile.userFullName();
+console.log(user()); //Anamul Haque
 ```
 
 [Go to top:arrow_up: ](#topAdv)
@@ -3216,6 +3653,38 @@ console.log(charArray); // ["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d
 
 [Go to top:arrow_up: ](#topAdv)
 
+<a name='rest'></a>
+
+<details>
+<summary>
+The Rest Operator
+</summary>
+# Rest Operator
+```js
+//Rest Operator (Must write at last)
+let arr = [1, 2, 3, 4];
+const [num1, ...restValue] = arr;
+console.log(num1, restValue); //1[2,3,4]
+
+const person = {
+name: "Anamul",
+age: 30,
+country: "Bangladesh",
+};
+
+const { name, ...rest } = person;
+console.log(name); // Output: Anamul
+console.log(rest); // Output: { age: 30, country: 'Bangladesh' }
+
+//Spread operator
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const arr3 = [...arr1, 10, 20, ...arr2];
+console.log(arr3); // Output: [1, 2, 3,10,20, 4, 5, 6]
+
+````
+</details>
+
 </details>
 
 <a nme='coercion1'></a>
@@ -3268,7 +3737,7 @@ let countries = "Bangladesh, Pakistan, China";
 countries = countries.split(" ,");
 console.log (countries);
 //result:  [ "Bangladesh, Pakistan, China" ]
-```
+````
 
 > **_Array change to String:_**
 
@@ -3424,6 +3893,8 @@ let myVar = new Date(); // toString converts to "Fri Jul 18 2014 09:08:55 GMT+02
 - closures in function
 - Rest parameter
 - Default Parameter
+- Constructor function
+- Factory function
 
 > **_How many types of function in JS:_**
 
@@ -3628,6 +4099,7 @@ console.log(data.class); //Nine
   Closures in JavaScript allow a function to access variables from its parent scope, even after the parent function has returned. This can be useful for creating private variables and methods, or for creating function factories. Closures can also be used to create self-contained and stateful functions, which can be useful in event handling, callbacks, and other asynchronous programming patterns.
 
 ```js
+//first system
 function outerFunction(x) {
   let variable = x;
   return function innerFunction() {
@@ -3637,6 +4109,16 @@ function outerFunction(x) {
 
 let closure = outerFunction(10);
 closure(); // logs "10"
+
+//Second system
+function outerFunction(num1) {
+  return function innerFunction(num2) {
+    return num1 * num2;
+  };
+}
+
+let closure = outerFunction(10);
+console.log(closure(12)); //120
 ```
 
 In this example, the outerFunction takes a single argument x and assigns it to the variable variable. It then returns the innerFunction, which when invoked, logs the value of variable. The innerFunction maintains a reference to the variable and the scope of outerFunction even though the outerFunction has completed execution.
@@ -3689,6 +4171,66 @@ console.log(printValue()); //Don't set your name.
 console.log(printValue("Anamul Haque")); //Anamul Haque
 ```
 
+> **_Constructor function_**
+
+- constructor function name define by Capital letter.
+- constructor function call by new keyword.
+- In constructor function this create a empty object {}
+- In object assign value and assigning value automatic return this function.
+
+```js
+function PrintProfile(fName, lName) {
+  console.log(this); // Return black object PrintProfile{}
+  //Assign Value in object
+  this.fName = fName;
+  this.lName = lName;
+  this.fullName = () => {
+    return `${this.fName} ${this.lName}`;
+  };
+}
+
+let anamul = new PrintProfile("Anamul", "Haque");
+console.log(anamul); //Automatic return object without return from function
+let mamun = new PrintProfile("Mamun", "Khan");
+console.log(mamun);
+```
+
+> **_factory function_**
+
+- For re-use
+
+```js
+function printProfile(fName, lName, email) {
+  return {
+    fName,
+    lName,
+    email,
+  };
+}
+console.log(printProfile("Anamul", "Haque", "a@gmail.com")); //Return object
+```
+
+# Pass function as argument
+
+```js
+function add(num1, num2) {
+  return num1 + num2;
+}
+function multipy(num1, num2) {
+  return num1 * num2;
+}
+function divide(num1, num2) {
+  return num1 / num2;
+}
+
+function calculateNumber(num1, num2, action) {
+  return action(num1, num2);
+}
+console.log(calculateNumber(2, 3, add)); //5
+console.log(calculateNumber(2, 3, multipy)); //6
+console.log(calculateNumber(2, 3, divide)); //0.66666
+```
+
 [Go to top:arrow_up: ](#top)
 
 </details>
@@ -3718,6 +4260,15 @@ console.log(printValue("Anamul Haque")); //Anamul Haque
 - Create a new li and put on ol
 
 > **_What is DOM?_**
+
+- এইচটিএমএল এর প্রত্যেকটি ইলিমেন্টকে ব্রাউজার অবজেক্ট হিসেবে রিসিভ করে।
+- ব্রাউজার এই সমস্ত অবজেক্টগুলোকে ডকুমেন্ট এর মধ্যে রাখে।
+- ডকুমেন্ট এর মধ্যে অবজেক্টগুলো একটি মডেল বা ট্রি আকারে আকারে থাকে।
+- তাই ইহাকে বলা হয় ডকুমেন্ট অবজেক্ট মডেল যাহা ব্রাউজারে অবস্থিত।
+- জাভাস্ক্রিপ্ট এর কিছু মেথডের মাধ্যমে ব্রাউজার থেকে অবজেক্টকে ধরে ইন্টারএ্যাকটিভিটি তৈরী করা হয়।
+- HTML -> Browser -> Document -> Object -> JS Method -> HTML -> Finally Inter activity in UI.
+- In browser console write document and get all html document object model
+- write 
 
 The HTML Document Object Model (DOM) is a programming interface for HTML documents. It represents the structure of a document as a tree-like model, with the document's elements and attributes as nodes in the tree. The DOM allows you to programmatically access and manipulate the content and structure of an HTML document.
 
@@ -3788,9 +4339,14 @@ You can use various DOM methods such as getElementById(), querySelector(), getEl
 
 Methods of selecting DOM:
 
+// Dont use css selector as . \* # etc
+
 - getElementById(id) - By id
 - getElementsByTagName(name) - By TagName
 - getElementsByClassName(name) - By className
+
+// Must use css selector
+
 - querySelector() - is used to select the first element that matches a CSS selector
 - querySelectorAll()- is used to select all elements that match a CSS selector. It returns a NodeList of all matching elements.
 
@@ -4086,3 +4642,383 @@ selectNode.appendChild(olItem);
 [Go to top:arrow_up: ](#top)
 
 </details>
+
+<details>
+<summary>Module</summary>
+
+<a name='module'></a>
+
+> **_Module_**
+
+ES6 Modules are a way to organize and structure code in JavaScript. They were introduced in ECMAScript 6 (ES6) and provide a way to share code across different JavaScript files.
+
+Modules allow you to create a collection of functions, classes, and variables, and then export them so that other JavaScript files can import and use them. This makes it easier to manage and reuse code, and it also helps to keep your code organized and maintainable.
+
+ES6 modules use a syntax that is different from the traditional CommonJS or AMD module formats. In an ES6 module, you use the import and export keywords to define which parts of the module are public and can be used by other files.
+
+## Named export and import
+
+- যে নামে এক্সপোর্ট করা হয় হুবহু ঐ নামেই {} এর মাধ্যমে ইমপোর্ট করতে হবে।
+
+```js
+export const userName = "Anamul"; //Direct export
+import { userName } from "./components/Test";
+
+const userName = "Anamul";
+const email = "a@gmail.com";
+export { userName, email }; //By {} export
+import { userName, email } from "./components/Test";
+```
+
+## default export and import
+
+- যে নামেই এক্সপোর্ট করা হউক না কেন যেকোন নামে ইমপোর্ট করা যাবে। {} ছাড়া ইমপোর্ট করতে হবে।
+
+```js
+const userName = "Anamul";
+const email = "a@gmail.com";
+export default { userName, email };
+
+import userName from "./components/Test";
+import email from "./components/Test";
+```
+
+> **_named export vs default export_\***
+
+In JavaScript, export and export default are used to make values or functions in one module available for use in another module.
+
+The export statement is used to export multiple values or functions from a module, and it can be used in one of two ways:
+
+    Named Exports: You can export multiple named values or functions from a module using the export keyword. For example:
+
+```js
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+```
+
+In this example, add and subtract are named exports that can be imported into another module using their exact names.
+
+Namespace Exports: You can export a namespace object that contains multiple values or functions using the export keyword. For example:
+
+```js
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+
+export default { add, subtract };
+```
+
+    In this example, we're exporting an object that contains the add and subtract functions as properties. This can be useful when you have a large number of exports and want to group them together under a single namespace.
+
+The export default statement is used to export a single value or function from a module, and it can only be used once per module. For example:
+
+```js
+// math.js
+const add = (a, b) => a + b;
+export default add;
+```
+
+In this example, we're exporting the add function as the default export of the math module. This means that when another module imports from math, it will receive the add function as the default import. If we wanted to export additional values or functions from this module, we would need to use named exports with the export keyword.
+
+</details>
+
+> **_Copy by value(for premetive data) copy by reference(for complex data)_**
+
+Copy by value means that when you make a copy of a variable, you create a new memory space for it and copy the value of the original variable into that new memory space. Changes made to the original variable will not affect the copied variable, and vice versa. This means that the copied variable is completely independent of the original variable.
+
+Copy by reference, on the other hand, means that when you make a copy of a variable, you create a new reference to the original variable. The copied variable and the original variable both refer to the same memory location. This means that any changes made to the original variable will also be reflected in the copied variable, and vice versa.
+
+```js
+// Copy by value
+let x = 5;
+let y = x;
+x = 10;
+console.log(y); // Output: 5
+
+// Copy by reference
+let a = [1, 2, 3];
+let b = a;
+a.push(4);
+console.log(b); // Output: [1, 2, 3, 4]
+```
+
+In the first example, we create a variable x and assign it the value of 5. We then create a new variable y and assign it the value of x. When we change the value of x to 10, the value of y remains 5, because y is a completely independent variable.
+
+In the second example, we create an array a and assign it the values of [1, 2, 3]. We then create a new variable b and assign it the value of a. When we add the value 4 to a using the push() method, the value of b also changes, because b is simply a reference to the same array in memory as a. This means that any changes made to the array through one variable will be reflected in the other variable as well.
+
+# Shallow copy
+
+- সম্পূর্ণ নতুন কপি তৈরী হয় ফলে পরবর্তীতে যেকোন পরিবর্তনে নিজস্ব পরিবর্তন হয় অন্যকে পরিবর্তন করেনা।
+- এই কপি কাজ করবে শুধু মাত্র প্লেইন এ্যারে বা অবজেক্ট এর মধ্যে েনেস্টেড হলে আর রেফারেন্স কপি হবে ফলে একের পরিবর্তন অন্যের উপর প্রভার ফেলবে।
+
+```js
+// Shallow copy in Array
+let originalArray = [1, 2, 3];
+let shallowCopy = originalArray.slice();
+originalArray[0] = 10;
+shallowCopy[1] = 20;
+console.log(originalArray); // Output: [10, 2, 3]
+console.log(shallowCopy); // Output: [1, 20, 3]
+
+//Shallow copy in object
+//By assign or spread operator
+let originalObject = { name: "Anamul", age: 30 };
+let shallowCopyObj = Object.assign({}, originalObject); //{} for add new key-value
+
+originalObject.age = 40;
+shallowCopyObj.name = "Mamun";
+
+console.log(originalObject); // Output: { name: "John", age: 40}
+console.log(shallowCopyObj); // Output: { name: "John", age: 30}
+```
+
+# Deep Copy
+
+- অবজেক্ট বা এ্যারে যখন নেস্টেড হবে তখন Shallow copy করে নেস্টেড অবজেক্ট বা এ্যারের কোন ভেল্যু পরিবর্তন করলে রেফারেন্স কপি হবে ফলে একের পরিবর্তন অন্যের উপর প্রভার ফেলবে। এ সমস্যা থেকে সমাধানের জন্য Deep Copy করতে হবে।
+
+```js
+// Shallow Nested copy in Array
+let originalArray = [1, 2, 3, [9, 10, 11]];
+let shallowCopy = originalArray.slice();
+originalArray[3][0] = 10;
+shallowCopy[1] = 20;
+console.log(originalArray); // Output: [1, 2, 3,[10,10,11]]
+console.log(shallowCopy); // Output: [1, 20, 3, [10,10,11]]
+
+// Deep copy in Array
+let originalArray2 = [1, 2, 3, [9, 10, 11]];
+let createString = JSON.stringify(originalArray2);
+let newArray = JSON.parse(createString);
+originalArray2[3][0] = 20;
+newArray[3][2] = 100;
+console.log(originalArray2); // Output: [1,2,3,[20,10,11]]
+console.log(newArray); // Output: [1, 2, 3,[9,10,100]]
+
+// Deep copy in Obj
+let originalObject = {
+  name: "Anamul",
+  age: 30,
+  address: { vill: "Boraitola" },
+};
+let createStringObj = JSON.stringify(originalObject);
+let newObject = JSON.parse(createStringObj);
+
+originalObject.vill = "xxx";
+newObject.vill = "yyy";
+
+console.log(originalObject); // name: "Anamul",age: 30,address: { vill: "xxx" }
+console.log(newObject); // name: "Anamul",age: 30,address: { vill: "yyy" }
+```
+
+> **_Mutable vs immutable data type_**
+
+- Mutable means changeable or modifyable.
+- Immutable means not changeable.
+- All primitive data is immutable and other is mutable.
+
+```js
+// Mutable data
+let myArray = [1, 2, 3];
+myArray.push(4);
+console.log(myArray); // Output: [1, 2, 3, 4]
+
+// Immutable data
+let myString = "hello";
+let myNewString = myString.toUpperCase();
+console.log(myString); // Output: "hello"
+console.log(myNewString); // Output: "HELLO"
+```
+
+In the above example, we first create an array called myArray and add a new element to it using the push() method. We see that the original array is modified in place.
+
+Next, we create a string called myString and use the toUpperCase() method to create a new string with all uppercase letters. We see that the original string is not modified, but instead a new string is created with the modified value. This is an example of immutable data, since the original string cannot be modified in place.
+
+# Math
+
+- Math.abs(): Returns the absolute value of a number.
+
+```js
+Math.abs(-5); // Output: 5
+```
+
+- Math.round(): Returns the nearest integer of a number.
+
+```js
+Math.round(3.5); // Output: 4
+```
+
+- Math.ceil(): Returns the smallest integer greater than or equal to a number.
+
+```js
+Math.ceil(3.1); // Output: 4
+```
+
+- Math.floor(): Returns the largest integer less than or equal to a number.
+
+```js
+Math.floor(3.9); // Output: 3
+```
+
+- Math.min(): Returns the minimum value of a set of numbers.
+
+```js
+Math.min(1, 2, 3, 4, 5); // Output: 1
+```
+
+- Math.max(): Returns the maximum value of a set of numbers.
+
+```js
+Math.max(1, 2, 3, 4, 5); // Output: 5
+```
+
+- Math.pow(): Returns the result of a base raised to an exponent.
+
+```js
+Math.pow(2, 3); // Output: 8
+```
+
+- Math.sqrt(): Returns the square root of a number.
+
+```js
+Math.sqrt(16); // Output: 4
+```
+
+- Math.random(): Returns a random number between 0 and 1.
+
+```js
+Math.random(); // Output: 0.9451282675859576 (example output)
+```
+
+# The Date object
+
+- creating date
+- get date
+- set date
+- converting date
+
+## Creating date
+
+---
+
+//Creating date:
+// new Date()
+// new Date(date string)
+// new Date(year,month)
+// new Date(year,month,day)
+// new Date(year,month,day,hours)
+// new Date(year,month,day,hours,minutes)
+// new Date(year,month,day,hours,minutes,seconds)
+// Month count from 0 to 11
+
+```js
+//Create current date by new Date() object
+let currentDate = new Date(); //Date Tue Feb 21 2023 06:53:42 GMT+0600 (Bangladesh Standard Time)
+
+// new Date(date string)
+let date = new Date("october 2014 23"); // Thu Oct 23 2014
+
+// new Date(year,month)
+date = new Date(2018, 5); //Fri Jun 01 2018
+
+//new Date(year,month,day)
+date = new Date(2019, 4, 23); //Thu May 23 2019
+
+//new Date(year,month,day,hours)
+date = new Date(2016, 5, 14, 12); //Tue Jun 14 2016 12:00:00
+
+// new Date(year,month,day,hours,minutes)
+date = new Date(2016, 5, 14, 12, 45); //Tue Jun 14 2016 12:45:00
+
+// new Date(year,month,day,hours,minutes,seconds)
+date = new Date(2016, 5, 14, 12, 45, 59); //Tue Jun 14 2016 12:45:59
+console.log(date);
+
+// JavaScript Date formates
+// ISO Date 	"2015-03-25" (The International Standard)
+// Short Date 	"03/25/2015"
+// Long Date 	"Mar 25 2015" or "25 Mar 2015"
+
+// Short Date 	"03/25/2015"
+let date2 = new Date("2015-03-23"); //Mon Mar 23 2015 06:00:00
+
+// Long Date 	"Mar 25 2015" or "25 Mar 2015"
+date2 = new Date("Feb 21 2023"); //Tue Feb 21 2023
+console.log(date2);
+```
+
+## get date from creating existing date by get Method
+
+---
+
+- The get methods above return Local time.
+- The get methods return information from existing date objects.
+- In a date object, the time is static. The "clock" is not "running".
+- The time in a date object is NOT the same as current time.
+
+- getFullYear() Get year as a four digit number (yyyy)
+- getMonth() Get month as a number (0-11)
+- getDate() Get day as a number (1-31)
+- getDay() Get weekday as a number (0-6)
+- getHours() Get hour (0-23)
+- getMinutes() Get minute (0-59)
+- getSeconds() Get second (0-59)
+- getMilliseconds() Get millisecond (0-999)
+- getTime() Get time (milliseconds since January 1, 1970)
+
+```js
+const date = new Date("2023-02-23T23:52:15.596Z");
+
+console.log(date.getFullYear()); // 2023
+console.log(date.getMonth()); // 1 (because the month is zero-indexed)
+console.log(date.getDate()); // 23
+console.log(date.getDay()); // 3 (because Wednesday is the third day of the week)
+console.log(date.getHours()); // 23
+console.log(date.getMinutes()); // 52
+console.log(date.getSeconds()); // 15
+console.log(date.getMilliseconds()); // 596
+console.log(date.getTime()); // 1645689135596
+```
+
+## Set Date in existing creating date
+
+---
+
+- setDate() Set the day as a number (1-31)
+- setFullYear() Set the year (optionally month and day)
+- setHours() Set the hour (0-23)
+- setMilliseconds() Set the milliseconds (0-999)
+- setMinutes() Set the minutes (0-59)
+- setMonth() Set the month (0-11)
+- setSeconds() Set the seconds (0-59)
+- setTime() Set the time (milliseconds since January 1, 1970)
+
+```js
+const date = new Date();
+date.setDate(10);
+date.setMonth(6);
+date.setFullYear(2022);
+date.setHours(14);
+date.setMinutes(30);
+date.setSeconds(0);
+date.setMilliseconds(0);
+
+console.log(date);
+```
+
+## Displaying Dates
+
+---
+
+- JavaScript will (by default) output dates in full text string format
+- When you display a date object in HTML, it is automatically converted to a string, with the `toString()` method.
+- The `toDateString()` method converts a date to a more readable format.
+- The `toISOString()` method converts a date to a string using the ISO standard
+
+```js
+let current = new Date();
+console.log(current); //Tue Feb 21 2023 08:39:11 GMT+0600 (Bangladesh Standard Time)
+console.log(current.toString()); //Tue Feb 21 2023 08:39:11 GMT+0600 (Bangladesh Standard Time)
+console.log(current.toDateString()); //Tue Feb 21 2023
+console.log(current.toISOString()); //2023-02-21T02:39:11.275Z
+```
